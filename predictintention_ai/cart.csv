@@ -1,0 +1,7 @@
+user_id,product_id,price,added_at,device,country,session_duration,pages_viewed,returning_user,discount_shown,purchased
+1,123,200,2024-06-20,mobile,TR,120,5,1,1,1
+2,456,150,2024-06-20,desktop,US,60,3,0,0,0
+3,789,300,2024-06-21,mobile,DE,240,7,1,1,1
+4,321,100,2024-06-21,desktop,FR,30,2,0,0,0
+5,654,250,2024-06-22,mobile,TR,180,6,1,1,1
+6,987,180,2024-06-22,desktop,IT,50,2,0,0,0
