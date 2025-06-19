@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 
-st.title("NiyetAI - Gelişmiş Sepet Terk Tahmini Paneli")
+st.title("Predictive İntention AI - Gelişmiş Sepet Terk Tahmini Paneli")
 
 uploaded_file = st.file_uploader("CSV Dosyası Yükle", type="csv")
 
