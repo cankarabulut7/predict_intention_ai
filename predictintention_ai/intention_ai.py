@@ -1,46 +1,32 @@
-from flask_cors import CORS
+# intention_ai.py
+
 from flask import Flask, request, jsonify
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 
 app = Flask(__name__)
-CORS(app)
 
-# Yeni cart.csv dosyasını oku
-df = pd.read_csv('cart.csv')
+# --- 1️⃣ Yeni veri dosyasını yükle ---
+DATA_FILE = 'cart.csv'
 
-# Sayısal feature’ları seçiyoruz
-features = ['price', 'session_duration', 'pages_viewed', 'returning_user', 'discount_shown']
+# Veriyi oku
+data = pd.read_csv(DATA_FILE)
 
-X = df[features]
-y = df['purchased']
+# Özellikler ve etiket
+X = data[['price', 'session_duration', 'pages_viewed', 'returning_user', 'discount_shown']]
+y = data['purchase_probability']
 
-# Modeli eğit
-model = LogisticRegression(max_iter=1000).fit(X, y)
+# --- 2️⃣ Modeli eğit ---
+model = LogisticRegression()
+model.fit(X, y)
 
+# --- 3️⃣ API uç noktası ---
 @app.route('/predict', methods=['POST'])
 def predict():
-    data = request.get_json()
-
-    # Gelen veride feature’ları alıyoruz, yoksa hata verir
-    try:
-        input_data = [[
-            data['price'],
-            data['session_duration'],
-            data['pages_viewed'],
-            data['returning_user'],
-            data['discount_shown']
-        ]]
-    except KeyError as e:
-        return jsonify({'error': f"Eksik alan: {str(e)}"}), 400
-
-    # Tahmin olasılığı hesapla
-    prob = model.predict_proba(input_data)[0][1]
-
-    return jsonify({"purchase_probability": prob})
+    input_data = request.json
+    input_df = pd.DataFrame([input_data])
+    prediction = model.predict_proba(input_df)[0][1]  # probability of class 1
+    return jsonify({'purchase_probability': prediction})
 
 if __name__ == '__main__':
-    import os
-    port = int(os.environ.get('PORT', 8000))
-    app.run(host='0.0.0.0', port=port)
-
+    app.run(host='0.0.0.0', port=8000)
