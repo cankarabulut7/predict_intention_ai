@@ -1,8 +1,10 @@
+from flask_cors import CORS
 from flask import Flask, request, jsonify
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 
 app = Flask(__name__)
+CORS(app)
 
 DATA_FILE = 'cart.csv'
 data = pd.read_csv(DATA_FILE)
