@@ -4,6 +4,7 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 
 app = Flask(__name__)
+CORS(app)
 
 # Yeni cart.csv dosyasını oku
 df = pd.read_csv('cart.csv')
