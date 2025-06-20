@@ -9,7 +9,7 @@ from openai import OpenAI
 # 🔑 Ortam değişkeninden API anahtarı kullan
 import os
 
-client = OpenAI(api_key=os.get_env("OPENAI_API_KEY"))
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 app = Flask(__name__)
 CORS(app)
