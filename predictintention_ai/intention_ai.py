@@ -9,7 +9,7 @@ from openai import OpenAI
 # 🔑 Ortam değişkeninden API anahtarı kullan
 import os
 
-client = OpenAI()
+client = OpenAI(api_key=os.get_env("OPENAI_API_KEY"))
 
 app = Flask(__name__)
 CORS(app)
@@ -21,7 +21,7 @@ data = pd.read_csv(DATA_FILE)
 X = data[['price', 'session_duration', 'pages_viewed', 'returning_user', 'discount_shown']]
 y = data['purchase_made']  # 0 veya 1
 
-model = LogisticRegression()
+model = LogisticRegression(max_iter=1000)
 model.fit(X, y)
 
 
