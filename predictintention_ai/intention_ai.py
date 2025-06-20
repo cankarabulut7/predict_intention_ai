@@ -3,10 +3,10 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
-from openai import OpenAI
+import google.generativeai as genai
 
-# 🚀 OpenAI istemcisi (API KEY ortamdan alınıyor)
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# 🚀 Gemini istemcisi (API KEY ortamdan alınıyor)
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 # 🚀 Flask app
 app = Flask(__name__)
@@ -30,7 +30,7 @@ def predict():
     probability = model.predict_proba(input_df)[0][1]
     return jsonify({'purchase_probability': probability})
 
-# 🚀 ChatGPT tavsiye endpoint'i
+# 🚀 Sonuc endpoint'i
 @app.route('/advice', methods=['POST'])
 def advice():
     try:
@@ -38,7 +38,6 @@ def advice():
         prob = data.get('probability')
         params = data.get('parameters')
 
-        # Güvenlik: Eksik veri kontrolü
         if prob is None or params is None:
             return jsonify({"error": "Missing probability or parameters"}), 400
 
@@ -48,20 +47,13 @@ def advice():
         Give a short marketing suggestion to increase the purchase probability.
         """
 
-        # En garantili model: gpt-3.5-turbo
-        response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a helpful marketing advisor AI."},
-                {"role": "user", "content": prompt}
-            ]
-        )
+        model = genai.GenerativeModel("gemini-pro")
+        response = model.generate_content(prompt)
+        advice_text = response.text.strip()
 
-        advice_text = response.choices[0].message.content.strip()
         return jsonify({"advice": advice_text})
 
     except Exception as e:
-        # Loglama için: hata detayını da göster
         print("ERROR:", str(e))
         return jsonify({"error": str(e)}), 500
 
