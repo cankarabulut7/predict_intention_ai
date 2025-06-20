@@ -33,27 +33,37 @@ def predict():
 # 🚀 ChatGPT tavsiye endpoint'i
 @app.route('/advice', methods=['POST'])
 def advice():
-    input_data = request.json
-    probability = input_data.get('probability')
-    parameters = input_data.get('parameters')
+    try:
+        data = request.json
+        prob = data.get('probability')
+        params = data.get('parameters')
 
-    prompt = f"""
-    The user is about to purchase. Predicted probability is {probability:.2%}.
-    User details: {parameters}.
-    Give a short smart advice to increase the chance.
-    """
+        # Güvenlik: Eksik veri kontrolü
+        if prob is None or params is None:
+            return jsonify({"error": "Missing probability or parameters"}), 400
 
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "You are a smart marketing AI."},
-            {"role": "user", "content": prompt}
-        ]
-    )
+        prompt = f"""
+        The current purchase probability is {prob:.2%}.
+        Customer info: {params}.
+        Give a short marketing suggestion to increase the purchase probability.
+        """
 
-    answer = response.choices[0].message.content
-    return jsonify({'advice': answer})
+        # En garantili model: gpt-3.5-turbo
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful marketing advisor AI."},
+                {"role": "user", "content": prompt}
+            ]
+        )
 
-# 🚀 Çalıştır
+        advice_text = response.choices[0].message.content.strip()
+        return jsonify({"advice": advice_text})
+
+    except Exception as e:
+        # Loglama için: hata detayını da göster
+        print("ERROR:", str(e))
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000)
+    app.run(host="0.0.0.0", port=8000)
