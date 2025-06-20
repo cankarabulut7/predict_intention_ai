@@ -44,7 +44,7 @@ def advice():
     """
 
     response = client.chat.completions.create(
-        model="gpt-4o",
+        model="gpt-4-turbo",
         messages=[
             {"role": "system", "content": "You are a smart marketing AI."},
             {"role": "user", "content": prompt}
