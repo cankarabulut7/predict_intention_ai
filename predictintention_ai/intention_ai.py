@@ -47,7 +47,7 @@ def advice():
         Give a short marketing suggestion to increase the purchase probability.
         """
 
-        model = genai.GenerativeModel("gemini-pro")
+        model = genai.GenerativeModel("gemini-2.5-flash")
         response = model.generate_content(prompt)
         advice_text = response.text.strip()
 
