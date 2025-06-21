@@ -42,9 +42,9 @@ def advice():
             return jsonify({"error": "Missing probability or parameters"}), 400
 
         prompt = f"""
-        The current purchase probability is {prob:.2%}.
-        Customer info: {params}.
-        Give a short marketing suggestion to increase the purchase probability.
+        Potansiyel satın alma oranı {prob:.2%}.
+        Müşteri Bilgisi: {params}.
+        Müşterinin satın alım potansiyelini artıracak bir marketing önerisi ver.
         """
 
         model = genai.GenerativeModel("gemini-2.5-flash")
